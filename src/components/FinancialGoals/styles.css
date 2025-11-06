@@ -1,0 +1,125 @@
+.financial-goals {
+  margin: 20px 0;
+}
+
+.goals-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.goals-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.goals-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.goals-list {
+  display: grid;
+  gap: 16px;
+}
+
+.goal-item {
+  border-radius: 8px;
+  transition: all 0.3s;
+  border-left: 4px solid #1890ff;
+}
+
+.goal-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.goal-item.goal-completed {
+  border-left-color: #52c41a;
+  background: #f6ffed;
+}
+
+.goal-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.goal-item-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  display: flex;
+  align-items: center;
+}
+
+.goal-tags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.goal-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  text-align: right;
+}
+
+.goal-description {
+  color: #8c8c8c;
+  font-size: 14px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.goal-status {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-text {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #595959;
+}
+
+.status-text.success {
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.days-remaining {
+  color: #8c8c8c;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .goals-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .goal-item-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .goal-amount {
+    text-align: left;
+  }
+}
+

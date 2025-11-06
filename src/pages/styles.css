@@ -1,0 +1,85 @@
+.dashboard-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.health-score-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.health-score-card .ant-card-body {
+  padding: 24px;
+}
+
+.health-score-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.health-score-content h3 {
+  color: white;
+  font-size: 20px;
+}
+
+.health-score-content p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.health-score-value {
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+}
+
+.dashboard-tabs {
+  margin-top: 20px;
+}
+
+.dashboard-tabs .ant-tabs-tab {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.chart.container {
+  margin: 20px 0;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.no-transaction {
+  text-align: center;
+  padding: 40px;
+}
+
+.no-transaction h2 {
+  color: #8c8c8c;
+  margin-bottom: 20px;
+}
+
+.no-transaction img {
+  max-width: 200px;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .health-score-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .health-score-value {
+    font-size: 36px;
+  }
+}
+
