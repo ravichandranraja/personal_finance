@@ -36,10 +36,10 @@
   position: absolute;
   bottom: 76px;
   right: 0;
-  width: 400px;
-  height: 640px;
-  min-height: 540px;
-  max-height: 85vh;
+  width: 360px;
+  height: 520px;
+  min-height: 420px;
+  max-height: 80vh;
   border-radius: 20px;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
   border: none;
@@ -70,6 +70,7 @@
   border-bottom: 1px solid #f0f0f0;
   background: #ffffff;
   border-radius: 20px 20px 0 0;
+  position: relative;
 }
 
 .chat-title {
@@ -111,6 +112,27 @@
 .close-btn:hover {
   color: #ff4d4f;
   background: rgba(255, 77, 79, 0.1);
+}
+
+/* Minimize button fixed to top-right of header */
+.minimize-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #8c8c8c;
+  border: none;
+  background: transparent;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.minimize-btn:hover {
+  color: #1677ff;
+  background: rgba(22, 119, 255, 0.1);
 }
 
 /* Insights Section */
@@ -158,7 +180,7 @@
   flex-direction: column;
   gap: 12px;
   background: #f8f9fa;
-  max-height: 420px;
+  max-height: 340px;
   min-height: 220px;
 }
 
@@ -437,8 +459,8 @@
   
   .chat-window {
     width: calc(100vw - 20px);
-    height: calc(100vh - 100px);
-    max-height: calc(100vh - 100px);
+    height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);
     bottom: 70px;
     right: 10px;
     left: 10px;
@@ -451,7 +473,7 @@
   }
   
   .messages-container {
-    max-height: calc(100vh - 320px);
+    max-height: calc(100vh - 340px);
   }
 }
 

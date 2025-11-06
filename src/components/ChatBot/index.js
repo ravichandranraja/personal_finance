@@ -7,7 +7,9 @@ import {
   RobotOutlined,
   UserOutlined,
   BulbOutlined,
-  DownOutlined
+  DownOutlined,
+  DownloadOutlined,
+  MinusOutlined
 } from '@ant-design/icons';
 import { useFinancialContext } from '../../contexts/FinancialContext';
 import { getFinancialAdvice, getQuickInsights } from '../../services/aiService';
@@ -17,12 +19,13 @@ const { TextArea } = Input;
 const { Text, Title } = Typography;
 
 const ChatBot = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const messagesEndRef = useRef(null);
   const { financialData } = useFinancialContext();
 
@@ -49,6 +52,33 @@ const ChatBot = () => {
     };
     loadInsights();
   }, [financialData]);
+
+  // Persist and restore chat history
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('financely_chat_messages');
+      if (saved) {
+        setMessages(JSON.parse(saved));
+        setShowSuggestions(false);
+      } else {
+        // Initialize with welcome message once
+        const welcomeMessage = {
+          id: Date.now(),
+          text: `Hello! I'm your personal finance assistant. I can help you with budgeting, saving tips, expense analysis, and financial planning. \n\nI can see you have ₹${financialData.currentBalance} in your current balance. How can I help you today?`,
+          sender: 'bot',
+          timestamp: new Date().toLocaleTimeString()
+        };
+        setMessages([welcomeMessage]);
+      }
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('financely_chat_messages', JSON.stringify(messages));
+    } catch {}
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -175,39 +205,47 @@ const ChatBot = () => {
     setShowSuggestions(false);
   };
 
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen && messages.length === 0) {
-      // Add welcome message when opening for the first time
-      const welcomeMessage = {
-        id: Date.now(),
-        text: `Hello! I'm your personal finance assistant. I can help you with budgeting, saving tips, expense analysis, and financial planning. 
-
-I can see you have ₹${financialData.currentBalance} in your current balance. How can I help you today?`,
-        sender: 'bot',
-        timestamp: new Date().toLocaleTimeString()
-      };
-      setMessages([welcomeMessage]);
-    }
+  const clearChat = () => {
+    setMessages([]);
+    localStorage.removeItem('financely_chat_messages');
+    const welcomeMessage = {
+      id: Date.now(),
+      text: `Hello! I'm your personal finance assistant. I can help you with budgeting, saving tips, expense analysis, and financial planning. \n\nI can see you have ₹${financialData.currentBalance} in your current balance. How can I help you today?`,
+      sender: 'bot',
+      timestamp: new Date().toLocaleTimeString()
+    };
+    setMessages([welcomeMessage]);
+    setShowSuggestions(true);
   };
+
+  const exportChat = () => {
+    const blob = new Blob([messages.map(m => `[${m.timestamp}] ${m.sender.toUpperCase()}: ${m.text}`).join('\n')], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'finance-assistant-chat.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const toggleCollapsed = () => setIsCollapsed(prev => !prev);
 
   return (
     <div className="chatbot-container">
-      {/* Floating Chat Button */}
-      <Tooltip title="Ask me about your finances!" placement="left">
+      {isCollapsed ? (
         <Button
           type="primary"
           shape="circle"
           size="large"
           icon={<MessageOutlined />}
-          className={`chat-toggle-btn ${isOpen ? 'open' : ''}`}
-          onClick={toggleChat}
+          className="chat-toggle-btn"
+          onClick={() => setIsCollapsed(false)}
+          title="Open Finance Assistant"
         />
-      </Tooltip>
-
-      {/* Chat Window */}
-      {isOpen && (
-        <Card className="chat-window">
+      ) : (
+      <Card className="chat-window" bodyStyle={{ padding: 0 }}>
           {/* Header */}
           <div className="chat-header">
             <div className="chat-title">
@@ -218,16 +256,21 @@ I can see you have ₹${financialData.currentBalance} in your current balance. H
                 Finance Assistant
               </Title>
             </div>
-            <Button
-              type="text"
-              icon={<CloseOutlined />}
-              onClick={() => setIsOpen(false)}
-              className="close-btn"
-            />
+            <div>
+              <Button type="text" onClick={() => setIsCollapsed(true)} className="minimize-btn" title="Minimize" aria-label="Minimize chatbot">
+                <MinusOutlined />
+              </Button>
+              <Button type="text" onClick={exportChat} className="close-btn" title="Export chat">
+                <DownloadOutlined />
+              </Button>
+              <Button type="text" onClick={clearChat} className="close-btn" title="Clear chat">
+                <CloseOutlined />
+              </Button>
+            </div>
           </div>
 
           {/* Quick Insights */}
-          {insights.length > 0 && (
+          {insights.length > 0 && !isCollapsed && (
             <div className="insights-section">
               <div className="insights-header">
                 <BulbOutlined className="insight-icon" />
@@ -244,6 +287,7 @@ I can see you have ₹${financialData.currentBalance} in your current balance. H
           )}
 
           {/* Messages */}
+          {!isCollapsed && (
           <div className="messages-container">
             {/* Inline suggestion chips (top) */}
             {showSuggestions && messages.length <= 1 && (
@@ -312,6 +356,7 @@ I can see you have ₹${financialData.currentBalance} in your current balance. H
               />
             )}
           </div>
+          )}
 
           {/* Quick Questions - Show when no messages or only welcome message */}
           {messages.length <= 1 && (
@@ -341,6 +386,7 @@ I can see you have ₹${financialData.currentBalance} in your current balance. H
           )}
 
           {/* Input Area */}
+          {!isCollapsed && (
           <div className="input-area">
             <div className="input-container">
               <TextArea
@@ -391,7 +437,8 @@ I can see you have ₹${financialData.currentBalance} in your current balance. H
               </div>
             )}
           </div>
-        </Card>
+          )}
+      </Card>
       )}
     </div>
   );

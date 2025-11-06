@@ -92,6 +92,34 @@ const Analytics = React.memo(({ transactions = [], income = 0, expense = 0 }) =>
     };
   }, [patterns.byCategory, expense]);
 
+  // Bar chart for top spending categories
+  const categoryBarChartData = useMemo(() => {
+    const entries = Object.entries(patterns.byCategory)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 6);
+    const labels = entries.map(([k]) => k);
+    const values = entries.map(([,v]) => v);
+    return {
+      options: {
+        chart: { type: 'bar', toolbar: { show: false } },
+        xaxis: { categories: labels },
+        colors: ['#1890ff'],
+        plotOptions: {
+          bar: { borderRadius: 6, horizontal: false, columnWidth: '45%' }
+        },
+        dataLabels: { enabled: false },
+        tooltip: {
+          y: {
+            formatter: function(value) {
+              return '₹' + value.toLocaleString();
+            }
+          }
+        }
+      },
+      series: [{ name: 'Expenses', data: values }]
+    };
+  }, [patterns.byCategory]);
+
   // Memoize monthly trend data
   const monthlyTrendData = useMemo(() => {
     const monthlyData = {};
@@ -270,6 +298,23 @@ const Analytics = React.memo(({ transactions = [], income = 0, expense = 0 }) =>
                 />
               ) : (
                 <div className="no-data">No trend data available</div>
+              )}
+            </Card>
+          </Col>
+        </Row>
+
+        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+          <Col xs={24}>
+            <Card title="Top Spending Categories (Bar)" className="chart-card">
+              {categoryBarChartData.series[0].data.length > 0 ? (
+                <ReactApexChart
+                  options={categoryBarChartData.options}
+                  series={categoryBarChartData.series}
+                  type="bar"
+                  height={320}
+                />
+              ) : (
+                <div className="no-data">No category data available</div>
               )}
             </Card>
           </Col>

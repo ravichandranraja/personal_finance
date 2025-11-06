@@ -18,6 +18,7 @@ import "./styles.css";
 const BudgetManager = React.lazy(() => import("../components/BudgetManager"));
 const FinancialGoals = React.lazy(() => import("../components/FinancialGoals"));
 const Analytics = React.lazy(() => import("../components/Analytics"));
+const Investments = React.lazy(() => import("../components/Investments"));
 
 const { TabPane } = Tabs;
 
@@ -283,6 +284,12 @@ const Dashboard = () => {
         <TabPane tab="Goals" key="goals">
           <Suspense fallback={<LoadingFallback />}>
             <FinancialGoals currentBalance={currentBalance} />
+          </Suspense>
+        </TabPane>
+
+        <TabPane tab="Investments" key="investments">
+          <Suspense fallback={<LoadingFallback />}>
+            <Investments />
           </Suspense>
         </TabPane>
       </Tabs>

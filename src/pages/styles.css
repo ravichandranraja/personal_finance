@@ -2,6 +2,8 @@
   padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
+  /* Reserve space so docked chatbot doesn't hide UI */
+  padding-bottom: 540px;
 }
 
 .health-score-card {
@@ -70,6 +72,7 @@
 @media (max-width: 768px) {
   .dashboard-container {
     padding: 10px;
+    padding-bottom: 140px;
   }
 
   .health-score-content {
