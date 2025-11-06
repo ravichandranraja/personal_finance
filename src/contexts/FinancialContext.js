@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 
 const FinancialContext = createContext();
 
@@ -21,41 +21,41 @@ export const FinancialProvider = ({ children }) => {
     isLoading: false
   });
 
-  const updateFinancialData = (newData) => {
+  const updateFinancialData = useCallback((newData) => {
     setFinancialData(prev => ({
       ...prev,
       ...newData
     }));
-  };
+  }, []);
 
-  const updateBudgets = (budgets) => {
+  const updateBudgets = useCallback((budgets) => {
     setFinancialData(prev => ({
       ...prev,
       budgets
     }));
-  };
+  }, []);
 
-  const updateGoals = (goals) => {
+  const updateGoals = useCallback((goals) => {
     setFinancialData(prev => ({
       ...prev,
       goals
     }));
-  };
+  }, []);
 
-  const setLoading = (isLoading) => {
+  const setLoading = useCallback((isLoading) => {
     setFinancialData(prev => ({
       ...prev,
       isLoading
     }));
-  };
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     financialData,
     updateFinancialData,
     updateBudgets,
     updateGoals,
     setLoading
-  };
+  }), [financialData, updateFinancialData, updateBudgets, updateGoals, setLoading]);
 
   return (
     <FinancialContext.Provider value={value}>
